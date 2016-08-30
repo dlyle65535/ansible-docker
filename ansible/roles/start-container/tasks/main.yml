@@ -3,6 +3,7 @@
     name: "{{ image_name }}"
     path: "{{ playbook_dir }}/.."
     dockerfile: "{{ dockerfile }}"
+    tls_hostname: localhost
     state: build
 
 - name: Start container
@@ -14,6 +15,7 @@
     # Workaround for: https://github.com/ansible/ansible-modules-core/issues/1885
     net: bridge
     tty: yes
+    tls_hostname: localhost
     command: sleep infinity
     state: reloaded
 

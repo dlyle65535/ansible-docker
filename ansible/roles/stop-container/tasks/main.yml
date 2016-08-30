@@ -2,4 +2,5 @@
   docker:
     name: "{{ container_name }}"
     image: "{{ image_name}}"
+    tls_hostname: localhost
     state: stopped

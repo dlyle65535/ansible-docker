@@ -20,15 +20,15 @@ class DockerDriver(object):
         except (requests.exceptions.ConnectionError, docker.errors.APIError), error:
             # deactivate the plugin on error
             self.disabled = True
-            ansible.utils.warning('Failed to contact docker daemon: {}'.format(error))
-            return
 
     def _connect(self):
         # use the same environment variable as other docker plugins
         docker_host = os.getenv('DOCKER_HOST', 'unix:///var/run/docker.sock')
+        print("Docker Host: " + docker_host)
         # default version is current stable docker release (10/07/2015)
         # if provided, DOCKER_VERSION should match docker server api version
         docker_server_version = os.getenv('DOCKER_VERSION', '1.19')
+        print("Docker Version: " + docker_server_version)
         self._client = docker.Client(base_url=docker_host,
                 version=docker_server_version, timeout=120)
         return self._client.ping()
@@ -50,8 +50,6 @@ class DockerDriver(object):
                 repository=host, tag=tag, author=self._author)
         except docker.errors.APIError, error:
             self.disabled = True
-            ansible.utils.warning('Failed to commit container: {}'.format(error))
-
 
 class CallbackModule(CallbackBase):
     """Emulate docker cache.
@@ -87,5 +85,5 @@ class CallbackModule(CallbackBase):
         if result.is_changed():
             try:
                 self.controller.snapshot(result._host.name, self._current_task)
-            except AttributeError:
-                return
+            except:
+                pass
